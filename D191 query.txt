@@ -21,3 +21,19 @@ ORDER BY COUNT(*);
 
 SELECT * FROM Lowest_10_Summary
 LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Summary);
+
+-- CREATE DETAILED TABLE
+
+CREATE TABLE Lowest_10_Detailed(
+customer_id integer,
+customer_first_name varchar(45),
+customer_last_name varchar(45),
+customer_email varchar(50),
+num_rentals integer);
+
+--  INSERT INTO DETAILED TABLE ????? FIXME  VVVVVVVV
+
+INSERT INTO Lowest_10_Detailed
+SELECT customer_id, first_name, last_name, email FROM customer
+SELECT num_rentals FROM Lowest_10_Summary
+ORDER BY customer_id;
