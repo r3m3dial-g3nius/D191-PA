@@ -1,0 +1,23 @@
+-- Steven Bennett
+-- ID 003761827
+-- D191 - Advanced Data Management 
+-- Performance Assessment
+
+
+-- CREATE SUMMARIZED TABLE
+
+CREATE TABLE Lowest_10_Summary(
+customer_id integer,
+num_rentals integer);
+
+-- INSERT DATA INTO SUMMARIZED TABLE
+
+INSERT INTO Lowest_10_Summary
+SELECT customer_id, COUNT(*) FROM rental
+GROUP BY customer_id
+ORDER BY COUNT(*);
+
+-- VIEW SUMMARIZED TABLE
+
+SELECT * FROM Lowest_10_Summary
+LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Summary);
