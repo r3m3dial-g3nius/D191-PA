@@ -34,6 +34,6 @@ num_rentals integer);
 --  INSERT INTO DETAILED TABLE ????? FIXME  VVVVVVVV
 
 INSERT INTO Lowest_10_Detailed
-SELECT customer_id, first_name, last_name, email FROM customer
-SELECT num_rentals FROM Lowest_10_Summary
+SELECT customer.customer_id, customer.first_name, customer.last_name, customer.email, Lowest_10_Summary.num_rentals
+FROM customers JOIN Lowest_10_Summary ON customers.customer_id = Lowest_10_Summary.customer_id
 ORDER BY customer_id;
