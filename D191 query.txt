@@ -17,8 +17,10 @@ num_rentals integer);
 -- INSERT DATA INTO SUMMARIZED TABLE
 
 INSERT INTO Lowest_10_Summary
-SELECT customer.customer_id, customer.first_name, customer.last_name, COUNT(*) FROM rental
-GROUP BY customer_id
+SELECT customer.customer_id, customer.first_name, customer.last_name, COUNT(rental.customer_id) AS num_rentals
+FROM customer, rental
+--INNER JOIN rental ON customer.customer_id = rental.customer_id
+GROUP BY customer.customer_id
 ORDER BY COUNT(*);
 
 -- VIEW SUMMARIZED TABLE
@@ -42,11 +44,11 @@ last_name varchar(45),
 email varchar(50),
 num_rentals integer);
 
---  INSERT INTO DETAILED TABLE ????? FIXME  VVVVVVVV
+--  INSERT INTO DETAILED TABLE 
 
 INSERT INTO Lowest_10_Detailed
-SELECT customers.customer_id, CONCAT (customers.first_name, " ", customers.last_name) AS full_name, customers.email, Lowest_10_Summary.num_rentals
-INNER JOIN rentals ON customers.customer_id = rentals.customer_id
+SELECT customer.customer_id, CONCAT (customer.first_name, " ", customer.last_name) AS full_name, customer.email, COUNT(rental.customer_id) AS num_rentals
+INNER JOIN rental ON customer.customer_id = rental.customer_id
 ORDER BY num_rentals;
 
 -- VIEW DETAILED TABLE
