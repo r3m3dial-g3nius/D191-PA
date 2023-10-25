@@ -6,14 +6,18 @@
 
 -- CREATE SUMMARIZED TABLE
 
+DROP TABLE IF EXISTS Lowest_10_Summary;
+
 CREATE TABLE Lowest_10_Summary(
 customer_id integer,
+first_name varchar(45),
+last_name varchar(45),
 num_rentals integer);
 
 -- INSERT DATA INTO SUMMARIZED TABLE
 
 INSERT INTO Lowest_10_Summary
-SELECT customer_id, COUNT(*) FROM rental
+SELECT customer.customer_id, customer.first_name, customer.last_name, COUNT(*) FROM rental
 GROUP BY customer_id
 ORDER BY COUNT(*);
 
@@ -22,18 +26,30 @@ ORDER BY COUNT(*);
 SELECT * FROM Lowest_10_Summary
 LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Summary);
 
+
+----------------------------------------------------------------------------------------------------------------------------
+
+
+
 -- CREATE DETAILED TABLE
+
+DROP TABLE IF EXISTS Lowest_10_Detailed;
 
 CREATE TABLE Lowest_10_Detailed(
 customer_id integer,
-customer_first_name varchar(45),
-customer_last_name varchar(45),
-customer_email varchar(50),
+first_name varchar(45),
+last_name varchar(45),
+email varchar(50),
 num_rentals integer);
 
 --  INSERT INTO DETAILED TABLE ????? FIXME  VVVVVVVV
 
 INSERT INTO Lowest_10_Detailed
-SELECT customer.customer_id, customer.first_name, customer.last_name, customer.email, Lowest_10_Summary.num_rentals
-FROM customers JOIN Lowest_10_Summary ON customers.customer_id = Lowest_10_Summary.customer_id
-ORDER BY customer_id;
+SELECT customers.customer_id, CONCAT (customers.first_name, " ", customers.last_name) AS full_name, customers.email, Lowest_10_Summary.num_rentals
+INNER JOIN rentals ON customers.customer_id = rentals.customer_id
+ORDER BY num_rentals;
+
+-- VIEW DETAILED TABLE
+
+SELECT * FROM Lowest_10_Detailed
+LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Detailed);
