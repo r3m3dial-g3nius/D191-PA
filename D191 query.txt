@@ -17,9 +17,9 @@ num_rentals integer);
 -- INSERT DATA INTO SUMMARIZED TABLE
 
 INSERT INTO Lowest_10_Summary
-SELECT customer.customer_id, customer.first_name, customer.last_name, COUNT(rental.customer_id) AS num_rentals
-FROM customer, rental
---INNER JOIN rental ON customer.customer_id = rental.customer_id
+SELECT customer.customer_id, customer.first_name, customer.last_name, COUNT(rental.customer_id)
+FROM customer--, rental
+LEFT JOIN rental ON customer.customer_id = rental.customer_id
 GROUP BY customer.customer_id
 ORDER BY COUNT(*);
 
