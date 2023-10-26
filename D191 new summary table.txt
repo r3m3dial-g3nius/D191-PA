@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS Lowest_10_Summary;
 CREATE TABLE Lowest_10_Summary(
 first_name varchar(45),
 last_name varchar(45),
-email varchar(50)
+email varchar(50),
 num_rentals integer);
 
 -- INSERT DATA INTO SUMMARIZED TABLE

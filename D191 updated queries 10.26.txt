@@ -1,3 +1,9 @@
+-- Steven Bennett
+-- ID 003761827
+-- D191 - Advanced Data Management 
+-- Performance Assessment
+
+
 -- CREATE DETAILED TABLE
 
 DROP TABLE IF EXISTS Lowest_10_Detailed;
