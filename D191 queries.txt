@@ -6,6 +6,7 @@
 
 -- CREATE SUMMARIZED TABLE
 
+
 DROP TABLE IF EXISTS Lowest_10_Summary;
 
 CREATE TABLE Lowest_10_Summary(
@@ -14,7 +15,11 @@ first_name varchar(45),
 last_name varchar(45),
 num_rentals integer);
 
+
+
+
 -- INSERT DATA INTO SUMMARIZED TABLE
+
 
 INSERT INTO Lowest_10_Summary
 SELECT customer.customer_id, customer.first_name, customer.last_name, COUNT(rental.customer_id)
@@ -23,17 +28,25 @@ LEFT JOIN rental ON customer.customer_id = rental.customer_id
 GROUP BY customer.customer_id
 ORDER BY COUNT(*);
 
+
+
+
 -- VIEW SUMMARIZED TABLE
 
 SELECT * FROM Lowest_10_Summary
 LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Summary);
 
 
+
+
 ----------------------------------------------------------------------------------------------------------------------------
 
 
 
+
 -- CREATE DETAILED TABLE
+
+
 
 DROP TABLE IF EXISTS Lowest_10_Detailed;
 
@@ -42,6 +55,9 @@ customer_id integer,
 full_name varchar(80),
 email varchar(50),
 num_rentals integer);
+
+
+
 
 --  INSERT INTO DETAILED TABLE 
 
@@ -52,19 +68,74 @@ LEFT JOIN rental ON customer.customer_id = rental.customer_id
 GROUP BY customer.customer_id
 ORDER BY COUNT(*);
 
+
+
+
 -- VIEW DETAILED TABLE
 
 SELECT * FROM Lowest_10_Detailed
 LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Detailed);
 
 
+
+
+
 ----------------------------------------------------------------------------------------------------------------------------
+
+
 
 
 
 -- CREATE A TRIGGER ON THE DETAILED TABLE THAT WILL UPDATE THE SUMMARY TABLE AS DATA IS ADDED TO THE DETAILED TABLE
 
-DROP FUNCTION IF EXISTS sum_table_update() CASCADE;
+DROP FUNCTION IF EXISTS sum_table_update();  --CASCADE?
 
 CREATE FUNCTION sum_table_update()
-RETURNS 
+	RETURNS Trigger
+	AS $$
+	BEGIN
+		INSERT INTO Lowest_10_Summary
+		VALUES(
+		new.first_name,
+		new.last_name,
+		new.email,
+		new.num_rentals);
+		RETURN new;
+	END;
+	$$
+	Language PLPGSQL;
+
+
+--  INSERT DATA INTO Lowest_10_Detailed
+--  CREATE Trigger
+
+DROP TRIGGER IF EXISTS Update_Summarized on Lowest_10_Detailed;
+CREATE TRIGGER Update_Summarized
+AFTER INSERT ON Lowest_10_Detailed
+FOR EACH ROW
+EXECUTE PROCEDURE sum_table_update();
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+-- PROVIDE AN ORIGINAL STORE PROCEDURE IN A TEXT FORMAT THAT CAN BE USED TO REFRESH THE DATA IN BOTH THE DETAILED TABLE AND SUMMARY TABLE. THE PROCEDURE SHOULD CLEAR THE CONTENTS OF THE DETAILED TABLE AND SUMMARY TABLE AND PERFORM THE RAW DATA EXTRACTION FROM PART D. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
