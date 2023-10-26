@@ -88,7 +88,8 @@ LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Detailed);
 
 -- CREATE A TRIGGER ON THE DETAILED TABLE THAT WILL UPDATE THE SUMMARY TABLE AS DATA IS ADDED TO THE DETAILED TABLE
 
-DROP FUNCTION IF EXISTS sum_table_update();  --CASCADE?
+
+DROP FUNCTION IF EXISTS sum_table_update(); 
 
 CREATE FUNCTION sum_table_update()
 	RETURNS Trigger
@@ -96,11 +97,11 @@ CREATE FUNCTION sum_table_update()
 	BEGIN
 		INSERT INTO Lowest_10_Summary
 		VALUES(
-		new.first_name,
-		new.last_name,
-		new.email,
-		new.num_rentals);
-		RETURN new;
+		New.first_name,
+		New.last_name,
+		New.email,
+		New.num_rentals);
+		RETURN New;
 	END;
 	$$
 	Language PLPGSQL;
@@ -115,6 +116,28 @@ AFTER INSERT ON Lowest_10_Detailed
 FOR EACH ROW
 EXECUTE PROCEDURE sum_table_update();
 
+
+
+
+---------------------------------------------------------------------------------------------------------------------------
+
+
+
+--  TEST TRIGGER AND FUNCTION
+
+
+INSERT INTO Lowest_10_Detailed
+Values(
+999,
+99,
+'Mike Honcho',
+'mikehoncho@usa.org',
+1);
+
+-- VIEW SUMMARIZED TABLE
+
+SELECT * FROM Lowest_10_Summary
+LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Summary);
 
 
 
