@@ -10,8 +10,7 @@
 DROP TABLE IF EXISTS Lowest_10_Summary;
 
 CREATE TABLE Lowest_10_Summary(
-first_name varchar(45),
-last_name varchar(45),
+full_name varchar(80),
 email varchar(50),
 num_rentals integer);
 
@@ -22,7 +21,7 @@ num_rentals integer);
 
 
 INSERT INTO Lowest_10_Summary
-SELECT customer.first_name, customer.last_name, customer.email, COUNT(rental.customer_id)
+SELECT CONCAT (customer.first_name, ' ', customer.last_name) AS full_name, customer.email, COUNT(rental.customer_id)
 FROM customer
 LEFT JOIN rental ON customer.customer_id = rental.customer_id
 GROUP BY customer.customer_id
@@ -98,8 +97,7 @@ CREATE FUNCTION sum_table_update()
 	BEGIN
 		INSERT INTO Lowest_10_Summary
 		VALUES(
-		New.first_name,
-		New.last_name,
+		New.full_name,
 		New.email,
 		New.num_rentals);
 		RETURN New;
