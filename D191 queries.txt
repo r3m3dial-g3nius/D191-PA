@@ -179,7 +179,7 @@ LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Summary);
 ----------------------------------------------------------------------------------------------------------------------------
 
 
-CREATE PROCEDURE refresh()
+CREATE OR REPLACE PROCEDURE refresh()
 LANGUAGE SQL
 AS $$
 DELETE FROM Lowest_10_Detailed;
@@ -200,7 +200,6 @@ $$;
 CALL refresh();
 
 SELECT * FROM Lowest_10_Summary
-
 
 
 
