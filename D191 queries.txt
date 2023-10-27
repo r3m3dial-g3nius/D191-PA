@@ -149,22 +149,20 @@ LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Summary);
 CREATE PROCEDURE refresh()
 LANGUAGE SQL
 AS $$
-DELETE FROM Lowest_10_Detailed
-DELETE FROM Lowest_10_Summary
+DELETE FROM Lowest_10_Detailed;
+DELETE FROM Lowest_10_Summary;
 
 INSERT INTO Lowest_10_Detailed
 SELECT customer.customer_id, customer.store_id, CONCAT (customer.first_name, ' ', customer.last_name) AS full_name, customer.email, COUNT(rental.customer_id)
 FROM customer
 LEFT JOIN rental ON customer.customer_id = rental.customer_id
 GROUP BY customer.customer_id
-ORDER BY COUNT(*);
-$$
+ORDER BY COUNT(*)
+$$;
 
 CALL refresh();
 
-SELECT * FROM Lowest_10_Summary;
-LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Summary);
-
+SELECT * FROM Lowest_10_Summary
 
 
 
