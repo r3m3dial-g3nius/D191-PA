@@ -15,7 +15,7 @@ AS
 $$
 DECLARE full_name VARCHAR(90);
 BEGIN
-	SELECT first_name || ' ' || last_name AS full_name;
+	SELECT first_name || ' ' || last_name INTO full_name;
 	RETURN full_name;
 END;
 $$
@@ -200,7 +200,6 @@ $$;
 CALL refresh();
 
 SELECT * FROM Lowest_10_Summary
-
 
 
 
