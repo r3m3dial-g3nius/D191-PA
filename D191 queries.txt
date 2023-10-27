@@ -4,7 +4,11 @@
 -- Performance Assessment
 
 
+
+
+----------------------------------------------------------------------------------------------------------------------------
 -- CREATE SUMMARIZED TABLE
+----------------------------------------------------------------------------------------------------------------------------
 
 
 DROP TABLE IF EXISTS Lowest_10_Summary;
@@ -38,13 +42,11 @@ LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Summary);
 
 
 
+
+
 ----------------------------------------------------------------------------------------------------------------------------
-
-
-
-
 -- CREATE DETAILED TABLE
-
+----------------------------------------------------------------------------------------------------------------------------
 
 
 DROP TABLE IF EXISTS Lowest_10_Detailed;
@@ -80,16 +82,14 @@ LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Detailed);
 
 
 
+
+
+----------------------------------------------------------------------------------------------------------------------------
+-- CREATE A TRIGGER ON THE DETAILED TABLE THAT WILL UPDATE THE SUMMARY TABLE AS DATA IS ADDED TO THE DETAILED TABLE
 ----------------------------------------------------------------------------------------------------------------------------
 
 
-
-
-
--- CREATE A TRIGGER ON THE DETAILED TABLE THAT WILL UPDATE THE SUMMARY TABLE AS DATA IS ADDED TO THE DETAILED TABLE
-
-
-DROP FUNCTION IF EXISTS sum_table_update() CASCADE;      --  ???
+DROP FUNCTION IF EXISTS sum_table_update() CASCADE;      
 
 CREATE FUNCTION sum_table_update()
 	RETURNS Trigger
@@ -116,13 +116,7 @@ FOR EACH ROW
 EXECUTE PROCEDURE sum_table_update();
 
 
-
-
----------------------------------------------------------------------------------------------------------------------------
-
-
-
---  TEST TRIGGER AND FUNCTION
+---------  >>>>   TEST TRIGGER AND FUNCTION   <<<<  ----------
 
 
 INSERT INTO Lowest_10_Detailed
@@ -141,14 +135,35 @@ LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Summary);
 
 
 
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------
+-- PROVIDE AN ORIGINAL STORE PROCEDURE IN A TEXT FORMAT THAT CAN BE USED TO REFRESH THE DATA IN BOTH THE DETAILED TABLE AND 
+-- SUMMARY TABLE. THE PROCEDURE SHOULD CLEAR THE CONTENTS OF THE DETAILED TABLE AND SUMMARY TABLE AND PERFORM THE RAW DATA 
+-- EXTRACTION FROM PART D. 
 ----------------------------------------------------------------------------------------------------------------------------
 
 
+CREATE PROCEDURE refresh()
+LANGUAGE SQL
+AS $$
+DELETE FROM Lowest_10_Detailed
+DELETE FROM Lowest_10_Summary
 
+INSERT INTO Lowest_10_Detailed
+SELECT customer.customer_id, customer.store_id, CONCAT (customer.first_name, ' ', customer.last_name) AS full_name, customer.email, COUNT(rental.customer_id)
+FROM customer
+LEFT JOIN rental ON customer.customer_id = rental.customer_id
+GROUP BY customer.customer_id
+ORDER BY COUNT(*);
+$$
 
+CALL refresh();
 
--- PROVIDE AN ORIGINAL STORE PROCEDURE IN A TEXT FORMAT THAT CAN BE USED TO REFRESH THE DATA IN BOTH THE DETAILED TABLE AND SUMMARY TABLE. THE PROCEDURE SHOULD CLEAR THE CONTENTS OF THE DETAILED TABLE AND SUMMARY TABLE AND PERFORM THE RAW DATA EXTRACTION FROM PART D. 
-
+SELECT * FROM Lowest_10_Summary;
+LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Summary);
 
 
 
