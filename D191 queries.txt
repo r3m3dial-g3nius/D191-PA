@@ -94,7 +94,7 @@ num_rentals integer);
 INSERT INTO Lowest_10_Detailed
 SELECT customer.customer_id, 
 	customer.store_id, 
-	Concat_names(customer.first_name, customer.last_name) AS full_name, --   FIX ME!!!!!!!!!!!!!!!
+	Concat_names(customer.first_name, customer.last_name) AS full_name, 
 	email, 
 	COUNT(rental.customer_id)
 FROM customer
@@ -179,7 +179,7 @@ LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest_10_Summary);
 ----------------------------------------------------------------------------------------------------------------------------
 
 
-CREATE OR REPLACE PROCEDURE refresh()
+CREATE PROCEDURE refresh()
 LANGUAGE SQL
 AS $$
 DELETE FROM Lowest_10_Detailed;
@@ -200,6 +200,7 @@ $$;
 CALL refresh();
 
 SELECT * FROM Lowest_10_Summary
+
 
 
 
