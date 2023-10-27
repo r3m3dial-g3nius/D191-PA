@@ -8,19 +8,17 @@
 --(SECTION B)--------------------------------------------------------------------------------------------------------------
 
 
-CREATE FUNCTION Concat_Values(
-	@value1 varchar(40),
-	@value@ varchar(40)
-	)
-
-RETURNS VARCHAR(80)
+CREATE FUNCTION Concat_Names(first_name varchar(40), last_name varchar(40))
+	RETURNS VARCHAR(80)
+	LANGUAGE plpgsql
 AS
+$$
+DECLARE full_name VARCHAR(80);
 BEGIN
-	DECLARE @RESULT VARCHAR(80);
-	SET @RESULT = @value1 + ' ' + value2;
-	RETURN @RESULT;
+	SET full_name = first_name + ' ' + last_name;
+	RETURN full_name;
 END;
-
+$$
 
 
 
