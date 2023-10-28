@@ -200,7 +200,8 @@ $$;
 CALL refresh();
 
 SELECT * FROM Lowest_10_Summary
-
+ORDER BY num_rentals
+LIMIT (SELECT COUNT(*) * 0.10 FROM Lowest-10_Summary);
 
 
 
