@@ -50,11 +50,11 @@ num_rentals integer);
 INSERT INTO Lowest_10_Summary
 SELECT CONCAT (customer.first_name, ' ', customer.last_name) AS full_name, 
 	customer.email, 
-	COUNT(rental.customer_id)  
+	COUNT(rental.customer_id) AS num_rentals  
 FROM customer
 LEFT JOIN rental ON customer.customer_id = rental.customer_id
 GROUP BY customer.customer_id
-ORDER BY COUNT(*);
+ORDER BY num_rentals;
 
 
 
